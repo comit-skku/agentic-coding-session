@@ -1,0 +1,157 @@
+<!doctype html>
+<html lang="ko">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="theme-color" content="#f5f6f2">
+    <title>CoMit | 함께 배우는 스터디</title>
+    <style>
+      :root {
+        color-scheme: light;
+        --ink: #17251f;
+        --muted: #68756e;
+        --green: #176b4b;
+        --paper: #f5f6f2;
+        --line: #e5e9e3;
+      }
+
+      * { box-sizing: border-box; }
+
+      body {
+        margin: 0;
+        background: var(--paper);
+        color: var(--ink);
+        font-family: "Pretendard", "Apple SD Gothic Neo", "Malgun Gothic", sans-serif;
+        -webkit-font-smoothing: antialiased;
+      }
+
+      .page { width: min(100% - 48px, 1040px); margin: 0 auto; }
+
+      header {
+        height: 80px;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        border-bottom: 1px solid var(--line);
+      }
+
+      .brand { display: flex; align-items: center; gap: 10px; font-weight: 800; letter-spacing: -.04em; }
+      .brand-mark { display: grid; width: 32px; height: 32px; place-items: center; border-radius: 10px; background: var(--green); color: white; font-size: 15px; }
+      .brand-name { font-size: 19px; }
+      nav { display: flex; gap: 30px; color: var(--muted); font-size: 13px; font-weight: 600; }
+      nav a { color: inherit; text-decoration: none; }
+      nav a[aria-current="page"] { color: var(--green); }
+
+      main { padding: 78px 0 88px; }
+      .eyebrow { margin: 0 0 16px; color: var(--green); font-size: 12px; font-weight: 800; letter-spacing: .13em; }
+      h1 { margin: 0; font-size: clamp(38px, 6vw, 62px); letter-spacing: -.065em; line-height: 1.12; }
+      .intro { max-width: 500px; margin: 19px 0 0; color: var(--muted); font-size: 16px; line-height: 1.8; }
+
+      .section-head { display: flex; align-items: end; justify-content: space-between; margin: 62px 0 18px; }
+      .section-head h2 { margin: 0; font-size: 21px; letter-spacing: -.04em; }
+      .section-head p { margin: 0; color: var(--muted); font-size: 13px; }
+
+      .study-card {
+        border: 1px solid var(--line);
+        border-radius: 16px;
+        background: #fff;
+        box-shadow: 0 8px 30px rgb(28 54 41 / 4%);
+      }
+
+      .study-card summary {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 24px;
+        padding: 25px 30px;
+        cursor: pointer;
+        list-style: none;
+      }
+      .study-card summary::-webkit-details-marker { display: none; }
+      .study-card summary:focus-visible { outline: 3px solid #8bbca4; outline-offset: 4px; border-radius: 12px; }
+      .study-card summary h3 { margin: 12px 0 0; font-size: 22px; letter-spacing: -.045em; }
+      .summary-side { display: flex; align-items: center; gap: 20px; }
+      .summary-hint { color: var(--muted); font-size: 12px; white-space: nowrap; }
+      .study-card[open] .summary-hint { color: var(--green); }
+      .study-info { display: grid; grid-template-columns: 1fr auto; gap: 30px; padding: 0 30px 30px; }
+
+      .tag { display: inline-block; padding: 7px 10px; border-radius: 7px; background: #eaf3ee; color: var(--green); font-size: 11px; font-weight: 800; }
+      .description { max-width: 590px; margin: 0; color: var(--muted); font-size: 14px; line-height: 1.8; }
+      .details { display: flex; flex-wrap: wrap; gap: 8px 20px; margin: 23px 0 0; padding: 0; color: #46564d; font-size: 12px; list-style: none; }
+      .details li { display: flex; align-items: center; gap: 7px; }
+      .details strong { color: var(--ink); font-weight: 700; }
+      .card-side { display: flex; flex-direction: column; align-items: end; justify-content: space-between; gap: 22px; min-width: 118px; }
+      .status { color: var(--green); font-size: 12px; font-weight: 800; }
+      .capacity { color: var(--muted); font-size: 12px; }
+
+      footer { padding: 22px 0; border-top: 1px solid var(--line); color: #8a948e; font-size: 11px; }
+
+      @media (max-width: 600px) {
+        .page { width: min(100% - 36px, 1040px); }
+        header { height: 68px; }
+        nav { gap: 16px; font-size: 12px; }
+        main { padding: 56px 0 64px; }
+        .section-head { align-items: start; flex-direction: column; gap: 8px; margin-top: 48px; }
+        .study-card summary { align-items: start; flex-direction: column; gap: 16px; padding: 23px; }
+        .summary-side { width: 100%; justify-content: space-between; gap: 10px; }
+        .study-info { grid-template-columns: 1fr; gap: 18px; padding: 0 23px 23px; }
+        .card-side { align-items: start; flex-direction: row; min-width: 0; }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="page">
+      <header>
+        <a class="brand" href="#home" aria-label="CoMit 홈">
+          <span class="brand-mark" aria-hidden="true">C</span>
+          <span class="brand-name">CoMit</span>
+        </a>
+        <nav aria-label="주요 메뉴">
+          <a href="#about">동아리 소개</a>
+          <a href="#studies" aria-current="page">스터디</a>
+        </nav>
+      </header>
+
+      <main id="home">
+        <p class="eyebrow">SKKU COMPUTER CLUB</p>
+        <h1>함께 배우고,<br>같이 만들어가요.</h1>
+        <p class="intro">성균관대학교 중앙동아리 CoMit에서 관심 있는 주제를 함께 공부하고, 작은 프로젝트로 배움을 이어가요.</p>
+
+        <section id="studies" aria-labelledby="studies-title">
+          <div class="section-head">
+            <h2 id="studies-title">이번 학기 스터디</h2>
+            <p>함께 성장할 동료를 만나보세요.</p>
+          </div>
+
+          <details class="study-card">
+            <summary aria-labelledby="study-title">
+              <div>
+                <span class="tag">프론트엔드</span>
+                <h3 id="study-title">웹 개발 입문 스터디</h3>
+              </div>
+              <div class="summary-side">
+                <span class="status">모집 중</span>
+                <span class="summary-hint">눌러서 상세 정보 보기</span>
+              </div>
+            </summary>
+            <div class="study-info">
+              <div>
+                <p class="description">HTML, CSS, JavaScript의 기초를 익히고 매주 작은 웹 페이지를 함께 만들어 봅니다. 웹 개발이 처음인 부원도 편하게 참여할 수 있어요.</p>
+                <ul class="details" aria-label="스터디 정보">
+                  <li><strong>모임</strong> 매주 수요일 18:00</li>
+                  <li><strong>장소</strong> 인문사회과학캠퍼스</li>
+                  <li><strong>진행</strong> 6주 과정</li>
+                </ul>
+              </div>
+              <div class="card-side">
+                <span class="capacity">참여 인원 <strong>4 / 8명</strong></span>
+              </div>
+            </div>
+          </details>
+        </section>
+      </main>
+
+      <footer id="about">CoMit · 성균관대학교 중앙동아리 · 예시 스터디 데이터</footer>
+    </div>
+  </body>
+</html>
