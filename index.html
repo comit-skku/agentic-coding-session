@@ -78,6 +78,12 @@
       .section-head h2 { margin: 0; font-size: 21px; letter-spacing: -.04em; }
       .section-head p { margin: 0; color: var(--muted); font-size: 13px; }
 
+      .study-search { margin: 0 0 16px; }
+      .study-search label { display: block; margin-bottom: 8px; color: var(--muted); font-size: 13px; font-weight: 600; }
+      .study-search input { width: min(100%, 420px); padding: 11px 13px; border: 1px solid var(--line); border-radius: 9px; background: var(--card); color: var(--ink); font: inherit; }
+      .study-search input:focus-visible { outline: 3px solid var(--focus); outline-offset: 2px; }
+      .study-search-empty { margin: 0; color: var(--muted); font-size: 14px; }
+
       .study-card {
         border: 1px solid var(--line);
         border-radius: 16px;
@@ -156,6 +162,12 @@
             <p>함께 성장할 동료를 만나보세요.</p>
           </div>
 
+          <div class="study-search">
+            <label for="study-search">스터디 제목 검색</label>
+            <input id="study-search" type="search" autocomplete="off">
+          </div>
+          <p class="study-search-empty" id="study-search-empty" role="status" aria-live="polite" hidden>검색 결과가 없습니다</p>
+
           <details class="study-card">
             <summary aria-labelledby="study-title">
               <div>
@@ -190,6 +202,23 @@
       const themeToggle = document.querySelector('#theme-toggle');
       const themeStorageKey = 'comit-theme';
       const themeColor = document.querySelector('meta[name="theme-color"]');
+      const studySearch = document.querySelector('#study-search');
+      const studyCards = Array.from(document.querySelectorAll('.study-card'));
+      const studySearchEmpty = document.querySelector('#study-search-empty');
+
+      studySearch.addEventListener('input', () => {
+        const query = studySearch.value.trim().toLocaleLowerCase();
+        let visibleCount = 0;
+
+        studyCards.forEach((card) => {
+          const title = card.querySelector('summary h3').textContent.trim().toLocaleLowerCase();
+          const matches = title.includes(query);
+          card.hidden = !matches;
+          if (matches) visibleCount += 1;
+        });
+
+        studySearchEmpty.hidden = visibleCount > 0;
+      });
 
       function setTheme(theme) {
         const isDark = theme === 'dark';
