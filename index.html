@@ -78,10 +78,12 @@
       .section-head h2 { margin: 0; font-size: 21px; letter-spacing: -.04em; }
       .section-head p { margin: 0; color: var(--muted); font-size: 13px; }
 
-      .study-search { margin: 0 0 16px; }
-      .study-search label { display: block; margin-bottom: 8px; color: var(--muted); font-size: 13px; font-weight: 600; }
-      .study-search input { width: min(100%, 420px); padding: 11px 13px; border: 1px solid var(--line); border-radius: 9px; background: var(--card); color: var(--ink); font: inherit; }
-      .study-search input:focus-visible { outline: 3px solid var(--focus); outline-offset: 2px; }
+      .study-filters { display: flex; flex-wrap: wrap; gap: 16px; margin: 0 0 16px; }
+      .study-search { flex: 1 1 280px; max-width: 420px; }
+      .study-category-filter { flex: 1 1 200px; max-width: 260px; }
+      .study-filters label { display: block; margin-bottom: 8px; color: var(--muted); font-size: 13px; font-weight: 600; }
+      .study-filters input, .study-filters select { width: 100%; padding: 11px 13px; border: 1px solid var(--line); border-radius: 9px; background: var(--card); color: var(--ink); font: inherit; }
+      .study-filters input:focus-visible, .study-filters select:focus-visible { outline: 3px solid var(--focus); outline-offset: 2px; }
       .study-search-empty { margin: 0; color: var(--muted); font-size: 14px; }
 
       .study-card {
@@ -109,6 +111,8 @@
       .study-info { display: grid; grid-template-columns: 1fr auto; gap: 30px; padding: 0 30px 30px; }
 
       .tag { display: inline-block; padding: 7px 10px; border-radius: 7px; background: var(--tag); color: var(--green); font-size: 11px; font-weight: 800; }
+      .study-tags { display: flex; flex-wrap: wrap; gap: 8px; }
+      .category-tag { background: var(--green); color: var(--brand-mark-ink); }
       .description { max-width: 590px; margin: 0; color: var(--muted); font-size: 14px; line-height: 1.8; }
       .details { display: flex; flex-wrap: wrap; gap: 8px 20px; margin: 23px 0 0; padding: 0; color: var(--detail); font-size: 12px; list-style: none; }
       .details li { display: flex; align-items: center; gap: 7px; }
@@ -126,6 +130,7 @@
         nav { gap: 16px; font-size: 12px; }
         main { padding: 56px 0 64px; }
         .section-head { align-items: start; flex-direction: column; gap: 8px; margin-top: 48px; }
+        .study-search, .study-category-filter { max-width: none; }
         .study-card summary { align-items: start; flex-direction: column; gap: 16px; padding: 23px; }
         .summary-side { width: 100%; justify-content: space-between; gap: 10px; }
         .study-info { grid-template-columns: 1fr; gap: 18px; padding: 0 23px 23px; }
@@ -162,16 +167,34 @@
             <p>함께 성장할 동료를 만나보세요.</p>
           </div>
 
-          <div class="study-search">
-            <label for="study-search">스터디 제목 검색</label>
-            <input id="study-search" type="search" autocomplete="off">
+          <div class="study-filters">
+            <div class="study-search">
+              <label for="study-search">스터디 제목 검색</label>
+              <input id="study-search" type="search" autocomplete="off">
+            </div>
+            <div class="study-category-filter">
+              <label for="study-category">스터디 카테고리</label>
+              <select id="study-category">
+                <option value="">전체</option>
+                <option value="기초 언어">기초 언어</option>
+                <option value="웹/앱">웹/앱</option>
+                <option value="AI">AI</option>
+                <option value="CS 기초">CS 기초</option>
+                <option value="CS 심화">CS 심화</option>
+                <option value="대회/공모전">대회/공모전</option>
+                <option value="자격증">자격증</option>
+              </select>
+            </div>
           </div>
           <p class="study-search-empty" id="study-search-empty" role="status" aria-live="polite" hidden>검색 결과가 없습니다</p>
 
-          <details class="study-card">
+          <details class="study-card" data-category="웹/앱">
             <summary aria-labelledby="study-title">
               <div>
-                <span class="tag">프론트엔드</span>
+                <div class="study-tags">
+                  <span class="tag category-tag">웹/앱</span>
+                  <span class="tag">프론트엔드</span>
+                </div>
                 <h3 id="study-title">웹 개발 입문 스터디</h3>
               </div>
               <div class="summary-side">
@@ -203,22 +226,28 @@
       const themeStorageKey = 'comit-theme';
       const themeColor = document.querySelector('meta[name="theme-color"]');
       const studySearch = document.querySelector('#study-search');
+      const studyCategory = document.querySelector('#study-category');
       const studyCards = Array.from(document.querySelectorAll('.study-card'));
       const studySearchEmpty = document.querySelector('#study-search-empty');
 
-      studySearch.addEventListener('input', () => {
+      function filterStudies() {
         const query = studySearch.value.trim().toLocaleLowerCase();
+        const category = studyCategory.value;
         let visibleCount = 0;
 
         studyCards.forEach((card) => {
           const title = card.querySelector('summary h3').textContent.trim().toLocaleLowerCase();
-          const matches = title.includes(query);
+          const matches = title.includes(query) && (!category || card.dataset.category === category);
           card.hidden = !matches;
           if (matches) visibleCount += 1;
         });
 
         studySearchEmpty.hidden = visibleCount > 0;
-      });
+      }
+
+      studySearch.addEventListener('input', filterStudies);
+      studyCategory.addEventListener('change', filterStudies);
+      filterStudies();
 
       function setTheme(theme) {
         const isDark = theme === 'dark';
